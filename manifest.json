@@ -1,9 +1,9 @@
 {
-  "name": "Youtube Audio",
-  "version": "0.0.2.2",
+  "name": "Youtube audio_only",
+  "version": "0.1",
   "manifest_version": 2,
-  "description": "Stream only Audio on Youtube",
-  "offline_enabled": true,
+  "description": "listen to Youtube audio (no video is downloaded)",
+  "homepage_url": "https://github.com/craftwar/youtube-audio",
   "icons": {
     "38": "img/icon38.png",
     "128": "img/icon128.png"
@@ -25,6 +25,7 @@
   },
   "content_scripts": [
     {
+      "all_frames": true,
       "matches": [
         "*://www.youtube.com/*",
         "*://m.youtube.com/*"
@@ -32,10 +33,7 @@
       "js": [
         "js/youtube_audio.js"
       ],
-      "css": [
-        "css/youtube_audio.css"
-      ],
-      "run_at": "document_start"
+      "run_at": "document_end"
     }
   ]
 }
