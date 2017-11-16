@@ -1,4 +1,7 @@
+//TODO
+//restore without reloading
 var tabIds = new Map();
+var targetTabId = new Set();
 function removeURLParameters(url, parameters) {
     let urlparts = url.split('?');
     if (urlparts.length >= 2) {
@@ -19,28 +22,28 @@ function removeURLParameters(url, parameters) {
 
 function reloadTab() {
     chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
-        var pattern = /\.youtube\./;
-        var url = tabs[0].url;
+        let pattern = /\.youtube\./;
+        let url = tabs[0].url;
 
         if (pattern.test(url))
             chrome.tabs.reload();
     });
 }
 
-function sendMessage(tabId) {
-    if (tabIds.has(tabId)) {
-        chrome.tabs.sendMessage(tabId, {url: tabIds.get(tabId)});
-    }
-}
-
 function processRequest(details) {
-    if (details.url.indexOf('mime=audio') !== -1) {
-        var parametersToBeRemoved = ['range=', 'rn=', 'rbuf='];
-        var audioURL = removeURLParameters(details.url, parametersToBeRemoved);
+    if (!targetTabId.has(details.tabId)) {
+        return;
+    }
+    if (details.url.includes('mime=audio')) {
+        let parametersToBeRemoved = ['range=', 'rn=', 'rbuf='];
+        let audioURL = removeURLParameters(details.url, parametersToBeRemoved);
+        chrome.tabs.sendMessage(details.tabId, {url: audioURL});
+/*
         if (tabIds.get(details.tabId) != audioURL) {
             tabIds.set(details.tabId, audioURL);
             chrome.tabs.sendMessage(details.tabId, {url: audioURL});
         }
+*/
     }
 }
 
@@ -51,7 +54,6 @@ function enableExtension() {
             38 : "img/icon38.png"
         }
     });
-    chrome.tabs.onUpdated.addListener(sendMessage);
     chrome.webRequest.onBeforeRequest.addListener(
         processRequest,
         {urls: ["<all_urls>"]},
@@ -65,13 +67,12 @@ function disableExtension() {
             38 : "img/disabled_icon38.png",
         }
     });
-/*    
+/*
     tabIds.forEach(function(value, key, map){
         chrome.tabs.sendMessage(key, {url: ""});
-    })
-*/    
+    });
+*/
     tabIds.clear();
-    chrome.tabs.onUpdated.removeListener(sendMessage);
     chrome.webRequest.onBeforeRequest.removeListener(processRequest);
 }
 
@@ -80,8 +81,9 @@ function saveSettings(disabled) {
 }
 
 chrome.browserAction.onClicked.addListener(function() {
+console.log(targetTabId);    
     chrome.storage.local.get('youtube_audio_state', function(values) {
-        var disabled = values.youtube_audio_state;
+        let disabled = values.youtube_audio_state;
 
         if (disabled) {
             enableExtension();
@@ -96,7 +98,7 @@ chrome.browserAction.onClicked.addListener(function() {
 });
 
 chrome.storage.local.get('youtube_audio_state', function(values) {
-    var disabled = values.youtube_audio_state;
+    let disabled = values.youtube_audio_state;
     if (typeof disabled === "undefined") {
         disabled = false;
         saveSettings(disabled);
@@ -108,3 +110,11 @@ chrome.storage.local.get('youtube_audio_state', function(values) {
         enableExtension();
     }
 });
+
+chrome.runtime.onMessage.addListener(function(message, sender) {
+    if (message == 1) {
+        targetTabId.add(sender.tab.id);
+    }
+});
+
+chrome.tabs.onRemoved.addListener( tabId => targetTabId.delete(tabId) )

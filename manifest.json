@@ -1,6 +1,6 @@
 {
   "name": "Youtube audio_only",
-  "version": "0.1",
+  "version": "0.2",
   "manifest_version": 2,
   "description": "listen to Youtube audio (no video is downloaded)",
   "homepage_url": "https://github.com/craftwar/youtube-audio",
@@ -21,7 +21,7 @@
     "storage"
   ],
   "browser_action": {
-    "default_title": "Youtube Audio"
+    "default_title": "Youtube audio_only"
   },
   "content_scripts": [
     {
