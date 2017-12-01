@@ -28,6 +28,7 @@ function reloadTab() {
     }
 }
 
+//can't cancel video or some video only(no audio) will not play
 function processRequest(details) {
     if (!targetTabId.has(details.tabId)) {
         return;
@@ -69,7 +70,7 @@ chrome.browserAction.onClicked.addListener(function() {
     chrome.storage.local.get('youtube_audio_state', function(values) {
         let enable = !values.youtube_audio_state;
         saveSettings(enable);
-        enable ? enableExtension() : disableExtension(), reloadTab();
+        enable ? enableExtension() : (disableExtension(), reloadTab());
     });
 });
 
