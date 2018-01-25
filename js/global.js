@@ -66,15 +66,15 @@ function saveSettings(enable) {
     chrome.storage.local.set({'youtube_audio_state': enable});
 }
 
-chrome.browserAction.onClicked.addListener(function() {
-    chrome.storage.local.get('youtube_audio_state', function(values) {
+chrome.browserAction.onClicked.addListener( ()=> {
+    chrome.storage.local.get('youtube_audio_state', (values) =>{
         let enable = !values.youtube_audio_state;
         saveSettings(enable);
         enable ? enableExtension() : (disableExtension(), reloadTab());
     });
 });
 
-chrome.storage.local.get('youtube_audio_state', function(values) {
+chrome.storage.local.get('youtube_audio_state', (values) =>{
     let enable = values.youtube_audio_state;
     enable ? enableExtension() : disableExtension();
 });
