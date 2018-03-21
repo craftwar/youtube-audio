@@ -4,8 +4,8 @@ function removeURLParameters(url, parameters) {
     if (urlparts.length >= 2) {
         let pars = urlparts[1].split(/[&;]/g);
 
-        for (let i = 0; i < pars.length; ++i) {
-            for (let parameter of parameters) {
+        for (var i = 0; i < pars.length; ++i) {
+            for (var parameter of parameters) {
                 if (pars[i].startsWith(parameter)) {
                     pars.splice(i, 1);
                     break;
@@ -18,13 +18,13 @@ function removeURLParameters(url, parameters) {
 }
 
 function reloadTab() {
-    for (let TabId of targetTabId) {
+    for (var TabId of targetTabId) {
         chrome.tabs.get(TabId, (tab) => {
             if (tab.active) {
                 chrome.tabs.reload(TabId);
                 return;
             }
-		});
+        });
     }
 }
 
@@ -80,9 +80,8 @@ chrome.storage.local.get('youtube_audio_state', (values) =>{
 });
 
 chrome.runtime.onMessage.addListener( (message, sender) => {
-    if (message == 1) {
+    if (message == "1")
         targetTabId.add(sender.tab.id);
-    }
 });
 
-chrome.tabs.onRemoved.addListener( tabId => targetTabId.delete(tabId) )
+chrome.tabs.onRemoved.addListener( tabId => targetTabId.delete(tabId) );
