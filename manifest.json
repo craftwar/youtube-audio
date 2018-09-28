@@ -27,7 +27,7 @@
     {
       "all_frames": true,
       "matches": [
-        "*://www.youtube.com/*"
+        "*://*.youtube.com/*"
       ],
       "js": [
         "js/youtube_audio.js"
