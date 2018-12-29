@@ -4,7 +4,7 @@ function removeURLParameters(url, parameters) {
     if (urlparts.length >= 2) {
         let pars = urlparts[1].split(/[&;]/g);
 
-        for (var i = 0; i < pars.length; ++i) {
+        for (var i = pars.length - 1; ~i; --i) {
             for (var parameter of parameters) {
                 if (pars[i].startsWith(parameter)) {
                     pars.splice(i, 1);
