@@ -1,11 +1,11 @@
-var targetTabId = new Set();
-function removeURLParameters(url, parameters) {
-    let urlparts = url.split('?');
+const targetTabId = new Set();
+function removeURLParameters(url, parametersToBeRemoved) {
+    const urlparts = url.split('?');
     if (urlparts.length >= 2) {
         let pars = urlparts[1].split(/[&;]/g);
 
         for (var i = pars.length - 1; ~i; --i) {
-            for (var parameter of parameters) {
+            for (const parameter of parametersToBeRemoved) {
                 if (pars[i].startsWith(parameter)) {
                     pars.splice(i, 1);
                     break;
@@ -18,7 +18,7 @@ function removeURLParameters(url, parameters) {
 }
 
 function reloadTab() {
-    for (var TabId of targetTabId) {
+    for (const TabId of targetTabId) {
         chrome.tabs.get(TabId, (tab) => {
             if (tab.active) {
                 chrome.tabs.reload(TabId);
@@ -33,8 +33,8 @@ function processRequest(details) {
     if (!targetTabId.has(details.tabId)) {
         return;
     } if (details.url.includes('mime=audio')) {
-        let parametersToBeRemoved = ['range=', 'rn=', 'rbuf='];
-        let audioURL = removeURLParameters(details.url, parametersToBeRemoved);
+        const parametersToBeRemoved = ['range=', 'rn=', 'rbuf='];
+        const audioURL = removeURLParameters(details.url, parametersToBeRemoved);
         chrome.tabs.sendMessage(details.tabId, {url: audioURL});
     }
 }
@@ -68,14 +68,14 @@ function saveSettings(enable) {
 
 chrome.browserAction.onClicked.addListener( ()=> {
     chrome.storage.local.get('youtube_audio_state', (values) =>{
-        let enable = !values.youtube_audio_state;
+        const enable = !values.youtube_audio_state;
         saveSettings(enable);
         enable ? enableExtension() : (disableExtension(), reloadTab());
     });
 });
 
 chrome.storage.local.get('youtube_audio_state', (values) =>{
-    let enable = values.youtube_audio_state;
+    const enable = values.youtube_audio_state;
     enable ? enableExtension() : disableExtension();
 });
 
