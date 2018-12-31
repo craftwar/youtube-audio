@@ -23,16 +23,16 @@ function removeURLParameters(url, parametersToBeRemoved) {
     if (urlparts.length >= 2) {
         let pars = urlparts[1].split(/[&;]/g);
 
-        // change order of for loop may increase performance a bit (keep it for safety)
-        for (var i = pars.length - 1; ~i; --i) {
-            for (const parameter of parametersToBeRemoved) {
+        // assume each parameter exists once only
+        for (const parameter of parametersToBeRemoved) {
+            for (var i = pars.length - 1; ~i; --i) {
                 if (pars[i].startsWith(parameter)) {
                     pars.splice(i, 1);
                     break;
                 }
             }
         }
-        url = urlparts[0] + '?' + pars.join('&');
+        url = `${urlparts[0]}?${pars.join('&')}`;
     }
     return url;
 }
@@ -48,12 +48,13 @@ function reloadTab() {
     }
 }
 
-//can't cancel video or video without audio-only stream will not play
+// can't cancel video or video without audio-only stream will not play
 function processRequest(details) {
     if (!targetTabId.has(details.tabId)) {
         return;
     } if (details.url.includes('mime=audio')) {
-        const parametersToBeRemoved = ['range=', 'rn=', 'rbuf='];
+        // reverse parameter order (same as url parameter traversal order)
+        const parametersToBeRemoved = ['rbuf=', 'rn=', 'range='];
         const audioURL = removeURLParameters(details.url, parametersToBeRemoved);
         chrome.tabs.sendMessage(details.tabId, {url: audioURL});
     }
