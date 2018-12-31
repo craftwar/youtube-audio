@@ -21,7 +21,7 @@ chrome.tabs.onRemoved.addListener( tabId => targetTabId.delete(tabId) );
 function removeURLParameters(url, parametersToBeRemoved) {
     const urlparts = url.split('?');
     if (urlparts.length >= 2) {
-        let pars = urlparts[1].split(/[&;]/g);
+        let pars = urlparts[1].split('&');
 
         // assume each parameter exists once only
         for (const parameter of parametersToBeRemoved) {
