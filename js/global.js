@@ -69,7 +69,9 @@ function enableExtension() {
     });
     chrome.webRequest.onBeforeRequest.addListener(
         processRequest,
-        {urls: ["<all_urls>"]},
+        { urls: ["<all_urls>"],
+          types: ["xmlhttprequest"]
+        },
         ["blocking"]
     );
 }
