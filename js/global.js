@@ -1,9 +1,29 @@
 const targetTabId = new Set();
+var enable;
+
+chrome.storage.local.get('youtube_audio_state', (values) =>{
+    enable = values.youtube_audio_state;
+    enable ? enableExtension() : disableExtension();
+});
+
+chrome.browserAction.onClicked.addListener( ()=> {
+    enable = !enable;
+    chrome.storage.local.set({'youtube_audio_state': enable});
+    enable ? enableExtension() : (disableExtension(), reloadTab());
+});
+
+chrome.runtime.onMessage.addListener( (message, sender) => {
+    targetTabId.add(sender.tab.id);
+});
+
+chrome.tabs.onRemoved.addListener( tabId => targetTabId.delete(tabId) );
+
 function removeURLParameters(url, parametersToBeRemoved) {
     const urlparts = url.split('?');
     if (urlparts.length >= 2) {
         let pars = urlparts[1].split(/[&;]/g);
 
+        // change order of for loop may increase performance a bit (keep it for safety)
         for (var i = pars.length - 1; ~i; --i) {
             for (const parameter of parametersToBeRemoved) {
                 if (pars[i].startsWith(parameter)) {
@@ -28,7 +48,7 @@ function reloadTab() {
     }
 }
 
-//can't cancel video or some video only(no audio) will not play
+//can't cancel video or video without audio-only stream will not play
 function processRequest(details) {
     if (!targetTabId.has(details.tabId)) {
         return;
@@ -61,27 +81,3 @@ function disableExtension() {
     });
     chrome.webRequest.onBeforeRequest.removeListener(processRequest);
 }
-
-function saveSettings(enable) {
-    chrome.storage.local.set({'youtube_audio_state': enable});
-}
-
-chrome.browserAction.onClicked.addListener( ()=> {
-    chrome.storage.local.get('youtube_audio_state', (values) =>{
-        const enable = !values.youtube_audio_state;
-        saveSettings(enable);
-        enable ? enableExtension() : (disableExtension(), reloadTab());
-    });
-});
-
-chrome.storage.local.get('youtube_audio_state', (values) =>{
-    const enable = values.youtube_audio_state;
-    enable ? enableExtension() : disableExtension();
-});
-
-chrome.runtime.onMessage.addListener( (message, sender) => {
-    if (message == "1")
-        targetTabId.add(sender.tab.id);
-});
-
-chrome.tabs.onRemoved.addListener( tabId => targetTabId.delete(tabId) );
