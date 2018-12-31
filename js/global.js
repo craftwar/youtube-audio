@@ -8,8 +8,8 @@ chrome.storage.local.get('youtube_audio_state', (values) =>{
 
 chrome.browserAction.onClicked.addListener( ()=> {
     enable = !enable;
-    chrome.storage.local.set({'youtube_audio_state': enable});
     enable ? enableExtension() : (disableExtension(), reloadTab());
+    chrome.storage.local.set({'youtube_audio_state': enable});
 });
 
 chrome.runtime.onMessage.addListener( (message, sender) => {
