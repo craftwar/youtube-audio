@@ -1,3 +1,5 @@
+'use strict';
+
 chrome.runtime.sendMessage('1');
 chrome.runtime.onMessage.addListener(
 	(request, sender, sendResponse) => {

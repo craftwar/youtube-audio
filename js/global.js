@@ -1,3 +1,5 @@
+'use strict';
+
 const targetTabId = new Set();
 var enable;
 
