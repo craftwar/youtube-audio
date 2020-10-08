@@ -24,7 +24,9 @@
     "default_title": "Youtube audio_only"
   },
   "commands": {
-    "_execute_browser_action": {}
+    "_execute_browser_action": {
+      "description": "Toggle Youtube audio only mode on/off"
+    }
   },
   "content_scripts": [
     {
