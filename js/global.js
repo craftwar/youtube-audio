@@ -59,7 +59,7 @@ function processRequest(details) {
 //	console.log("details.type= " + details.type);
 	if (details.url.includes('mime=audio') && !details.url.includes('live=1')) {
 		// reverse parameter order (same as url parameter traversal order)
-		const parametersToBeRemoved = ['rbuf=', 'rn=', 'range='];
+		const parametersToBeRemoved = ['ump', 'rbuf=', 'rn=', 'range='];
 		const audioURL = removeURLParameters(details.url, parametersToBeRemoved);
 		chrome.tabs.sendMessage(details.tabId, {url: audioURL});
 	}
