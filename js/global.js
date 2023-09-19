@@ -52,7 +52,10 @@ function reloadTab() {
 
 // can't cancel video or video without audio-only stream will not play
 function processRequest(details) {
-	if (!targetTabId.has(details.tabId)) {
+	// console.log("originUrl = " + details.originUrl + "\n")
+	// console.log("documentUrl = " + details.documentUrl + "\n")
+	// console.log("url = " + details.url + "\n")
+	if (!targetTabId.has(details.tabId) || details.originUrl == "https://www.youtube.com/") {
 		return;
 	} 
 //	console.log("details.url= " + details.url);
