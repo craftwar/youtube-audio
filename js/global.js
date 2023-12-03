@@ -64,7 +64,7 @@ function processRequest(details) {
 		// reverse parameter order (same as url parameter traversal order)
 		const parametersToBeRemoved = ['ump', 'rbuf=', 'rn=', 'range='];
 		const audioURL = removeURLParameters(details.url, parametersToBeRemoved);
-		chrome.tabs.sendMessage(details.tabId, {url: audioURL});
+		chrome.tabs.sendMessage(details.tabId, {url: audioURL}, {frameId: details.frameId});
 	}
 }
 
