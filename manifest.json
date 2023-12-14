@@ -1,12 +1,16 @@
 {
   "name": "Youtube audio_only",
-  "version": "0.3.11",
+  "version": "23.12.14",
   "manifest_version": 2,
   "description": "listen to Youtube audio (no video is downloaded)",
   "homepage_url": "https://github.com/craftwar/youtube-audio",
   "icons": {
     "38": "img/icon38.png",
     "128": "img/icon128.png"
+  },
+  "browser_specific_settings": {
+    "gecko": {},
+    "gecko_android": {}
   },
   "background": {
     "scripts": [
