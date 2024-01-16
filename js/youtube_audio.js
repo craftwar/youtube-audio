@@ -6,8 +6,11 @@ chrome.runtime.onMessage.addListener(
 		const url = request.url;
 		const videoElement = document.getElementsByTagName('video')[0];
 		if (videoElement.src != url) {
+			let currentTime = videoElement.currentTime;
 			videoElement.src = url;
-			videoElement.play();
+			videoElement.currentTime = currentTime;
+			if (!videoElement.paused)
+				videoElement.play();
 		}
 	}
 );
