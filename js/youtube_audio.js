@@ -9,8 +9,8 @@ chrome.runtime.onMessage.addListener(
 			let currentTime = videoElement.currentTime;
 			videoElement.src = url;
 			videoElement.currentTime = currentTime;
-			if (!videoElement.paused)
-				videoElement.play();
+			// if (!videoElement.paused)
+			videoElement.play();
 		}
 	}
 );
